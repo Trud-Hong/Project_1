@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.habit">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(record_id),0) from habit_record
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.HabitDTO">
+		insert into habit_record (record_id, member_no, record_date, 
+		breakfast_time, lunch_time, dinner_time)
+		values (#{record_id},#{member_no},sysdate,
+        <choose>
+            <when test="breakfast_time != null and breakfast_time != ''">
+                TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD') || ' ' || #{breakfast_time}, 'YYYYMMDD HH24:MI')
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="lunch_time != null and lunch_time != ''">
+                TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD') || ' ' || #{lunch_time}, 'YYYYMMDD HH24:MI')
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="dinner_time != null and dinner_time != ''">
+                TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD') || ' ' || #{dinner_time}, 'YYYYMMDD HH24:MI')
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        )
+	</insert>
+	
+	<select id="getDataCount" parameterType="int" resultType="int">
+		select (
+		case when breakfast_time is not null then 1 else 0 end
+		+ case when lunch_time is not null then 1 else 0 end
+		+ case when dinner_time is not null then 1 else 0 end) as num
+		from (
+		select * from (
+		select rownum rnum, data.* from(
+		select record_id, member_no, record_date, 
+		breakfast_time, lunch_time, dinner_time from habit_record 
+		where member_no= #{member_no}
+		order by record_id desc) data)
+		where rnum=1)
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.HabitDTO">
+		select rownum rnum, data.* from(
+		select record_id, member_no, record_date, 
+		breakfast_time, lunch_time, dinner_time from habit_record 
+		where member_no=#{member_no} 
+		order by record_id desc) data
+	</select>
+	
+	<!-- 
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.HabitDTO">
+		select habit_id, member_no, record_date, breakfast, breakfast_time, 
+		lunch, lunch_time, dinner, dinner_time
+		from habit_record 
+		where habit_id=#{habit_id}
+	</select>
+	 -->
+	<select id="getReadData" parameterType="map" resultType="com.health.dto.HabitDTO">
+        select record_id, member_no, record_date, breakfast_time, 
+		lunch_time, dinner_time
+		from habit_record 
+        WHERE member_no = #{member_no}
+        ORDER BY RECORD_ID DESC
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.HabitDTO">
+		update habit_record set record_id=#{record_id}, member_no=#{member_no}, 
+		record_date=#{record_date}, breakfast_time=#{breakfast_time}, 
+		lunch_time=#{lunch_time}, dinner_time=#{dinner_time} 
+		where record_id=#{record_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete habit_record where habit_id=#{habit_id}
+	</delete>
+
+</mapper>

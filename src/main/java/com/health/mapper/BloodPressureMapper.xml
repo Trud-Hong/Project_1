@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.bloodPressure">
+
+	<resultMap id="bloodPressureResultMap" type="com.health.dto.BloodPressureDTO">
+	    <id property="bpId" column="BP_ID"/>
+	    <result property="memberNo" column="MEMBER_NO"/>
+	    <result property="log_Date" column="LOG_DATE"/>
+	    <result property="bpLevel" column="BP_LEVEL"/>
+	    <result property="bpHigh" column="BP_HIGH"/>
+	    <result property="bpLow" column="BP_LOW"/>
+	</resultMap>
+
+    <!-- 혈압 기록 추가 - log_date 사용 -->
+    <insert id="insertData" parameterType="com.health.dto.BloodPressureDTO">
+        INSERT INTO blood_pressure 
+            (bp_id, member_no, log_date, bp_level, bp_high, bp_low)
+        VALUES 
+            (#{bpId}, #{memberNo}, #{log_Date}, #{bpLevel}, #{bpHigh}, #{bpLow})
+    </insert>
+
+    <!-- 혈압 기록 개수 확인 -->
+    <select id="getDataCount" parameterType="map" resultType="int">
+        SELECT NVL(COUNT(*), 0) 
+        FROM blood_pressure
+        WHERE ${searchKey} LIKE '%' || #{searchValue} || '%'
+    </select>
+
+    <!-- 특정 회원의 최신 혈압 기록 (1건만) - logDate 사용 -->
+    <select id="getReadData" parameterType="map" resultMap="bloodPressureResultMap">
+	        SELECT * 
+	        FROM blood_pressure
+	        WHERE member_no = #{memberNo}
+	        ORDER BY LOG_DATE DESC
+	</select>
+
+    <!-- 혈압 수정 - log_date 사용 -->
+    <update id="updateData" parameterType="com.health.dto.BloodPressureDTO">
+        UPDATE blood_pressure
+        SET log_date = #{log_Date},
+            bp_level = #{bpLevel}, 
+            bp_high = #{bpHigh}, 
+            bp_low = #{bpLow},
+        	created_at = SYSDATE
+	    where member_no = #{memberNo} 
+	    and TRUNC(log_date) = TRUNC(#{log_Date})
+    </update>
+
+</mapper>

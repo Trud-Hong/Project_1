@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.mapper.UserMapper">
+
+    <!-- 구글 고유 ID로 사용자 찾기 -->
+    <select id="findByGoogleId" resultType="com.health.dto.CustomInfo">
+        SELECT * FROM member WHERE member_id = #{member_id}
+    </select>
+    
+    <select id="findByEmail" resultType="com.health.dto.CustomInfo">
+	    SELECT * FROM member WHERE email = #{email}
+	</select>
+
+    <!-- 새 사용자 저장 -->
+    <insert id="saveUser" parameterType="com.health.dto.CustomInfo">
+    <![CDATA[
+    MERGE INTO member m
+    USING (SELECT #{member_id} AS member_id, #{name} AS name, #{email} AS email, 
+                  #{password} AS password, #{gender} AS gender, #{birth} AS birth, 
+                  #{height} AS height, #{weight} AS weight, #{goal} AS goal, #{bmi} AS bmi FROM dual) new_data
+    ON (m.member_id = new_data.member_id)
+    WHEN MATCHED THEN
+        UPDATE SET m.name = new_data.name,
+                  m.email = new_data.email,
+                  m.password = new_data.password,
+                  m.gender = new_data.gender,
+                  m.birth = new_data.birth,
+                  m.height = new_data.height,
+                  m.weight = new_data.weight,
+                  m.goal = new_data.goal,
+                  m.bmi = new_data.bmi
+    WHEN NOT MATCHED THEN
+        INSERT (member_id, name, email, password, gender, birth, height, weight, goal, bmi)
+        VALUES (new_data.member_id, new_data.name, new_data.email, new_data.password,
+                new_data.gender, new_data.birth, new_data.height, new_data.weight,
+                new_data.goal, new_data.bmi)
+	    ]]>
+	</insert>
+
+
+</mapper>
+

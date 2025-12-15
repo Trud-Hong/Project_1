@@ -1,0 +1,386 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f9;
+	margin: 0;
+	padding: 0;
+}
+
+.footer {
+	clear:both;
+	height:32px;
+	line-height:32px;
+	margin-top:5px;
+	text-align:center;
+}
+
+header {
+    background: #4a76a8;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+header .left {
+    flex: 1;
+}
+
+header > div:nth-child(2) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+header > div:nth-child(3) {
+    flex: 1;
+}
+
+ header a{
+     color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18pt;
+ }
+  
+header a:hover{
+text-decoration: none;
+}
+
+.container {
+	max-width: 800px;
+	margin: 30px auto;
+	padding: 0 20px;
+}
+
+.card {
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+	margin-top: 0;
+	font-size: 18px;
+	margin-bottom: 15px;
+	color: #333;
+}
+
+.btn {
+	position:absolute;
+	top: 15px;
+	right: 25px;
+	display: inline-block;
+	margin-top: 10px;
+	padding: 8px 16px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 20px;
+	font-size: 14px;
+	cursor: pointer;
+	border: none;
+}
+
+.btnfoot {
+	top: 15px;
+	right: 25px;
+	display: inline-block;
+	margin-top: 10px;
+	padding: 8px 16px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 20px;
+	font-size: 14px;
+	cursor: pointer;
+	border: none;
+	
+}
+
+.btnfoot:hover {
+	background: #3a5a85;
+}
+
+
+.btn2 {
+	display: inline-block;
+	margin-bottom: 10px;
+	padding: 6px 12px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 4px;
+	font-size: 14px;
+	cursor: pointer;
+	border: none;
+}
+.btn2:hover {
+	background: #3a5a85;
+}
+
+.btn:hover {
+	background: #3a5a85;
+}
+
+.danger {
+	background: #d9534f;
+	margin-left: 10px;
+}
+
+.danger:hover {
+	background: #c12e2a;
+}
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 5px; /* 위쪽 여백을 줄여서 stat-item과 붙도록 */
+}
+
+.review-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateY(-2px);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-title a {
+    font-weight: bold;
+    font-size: 16px;
+    color: #4a76a8;
+    text-decoration: none;
+}
+
+.review-title a:hover {
+    text-decoration: underline;
+}
+
+.review-author {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.review-content {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.review-footer {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+}
+
+
+.no-reviews {
+	text-align: center;
+	color: #666;
+	font-style: italic;
+	padding: 50px 0;
+}
+
+.write-review {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.stats {
+	position:relative;
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center;          /* 세로 가운데 정렬 */
+    text-align: center;
+    background: #f8f9fa;
+    padding: 10px 15px;           /* 상하 padding 줄임 */
+    border-radius: 8px;
+    gap: 10px;                     /* 카드들 사이 간격 */
+    margin-bottom: 5px;
+}
+
+.stat-item {
+	flex: 1;
+}
+
+.stat-number {
+	font-size: 24px;
+	font-weight: bold;
+	color: #4a76a8;
+}
+
+.stat-label {
+	font-size: 14px;
+	color: #666;
+	margin-top: 5px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: bold;
+	color: #333;
+}
+
+.form-group textarea, 
+.form-group input[type="text"], 
+.form-group input[type="password"] {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	box-sizing: border-box;
+}
+
+.form-group textarea {
+	resize: vertical;
+	min-height: 100px;
+}
+
+.form-submit {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.simple-review-item {
+	margin-bottom: 15px;
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 4px;
+}
+
+.simple-review-header {
+	font-weight: bold;
+	color: #4a76a8;
+	margin-bottom: 8px;
+}
+
+.simple-review-content {
+	margin-bottom: 10px;
+	line-height: 1.5;
+}
+
+.simple-review-meta {
+	font-size: 12px;
+	color: #666;
+}
+
+.simple-review-actions {
+	margin-top: 10px;
+}
+
+.simple-review-actions a {
+	margin-right: 10px;
+	font-size: 14px;
+}
+
+.page-box {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    margin: 0 2px;
+    border: 1px solid #4a76a8;
+    border-radius: 4px;
+    color: #4a76a8;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.page-box:hover {
+    background-color: #4a76a8;
+    color: white;
+}
+
+.page-box.active {
+    background-color: #4a76a8;
+    color: white;
+    cursor: default;
+}
+
+/* 검색창 가운데 정렬 */
+#searchFormContainer {
+    display: flex;
+    justify-content: center; /* 수평 가운데 */
+    align-items: center;     /* 수직 가운데 */
+    gap: 10px;               /* input과 버튼 간격 */
+}
+
+#searchFormContainer select{
+    height: 36px;
+    padding: 0 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 70px; /* 너비 조정 */
+    box-sizing: border-box; /* 패딩 포함 너비 */
+}
+
+#searchFormContainer input[type="text"] {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 300px; /* 너비 조정 */
+    box-sizing: border-box; /* 패딩 포함 너비 */
+}
+
+
+
+#searchFormContainer input.btn2 {
+    height: 36px;
+    padding: 0 16px;
+}
+
+/* 검색창 select 스타일 개선 */
+.selectField {
+    height: 36px;
+    padding: 0 12px;          /* 좌우 패딩 약간 더 줌 */
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 100px;             /* 너비를 약간 키워서 선택지 내용 잘 보이도록 */
+    box-sizing: border-box;
+    background-color: white;  /* 흰색 배경 유지 */
+    color: #333;              /* 텍스트 색상 진하게 */
+    appearance: none;         /* 기본 화살표 제거 (브라우저 기본 스타일 없앰) */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%234a76a8' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px 16px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.selectField:hover, 
+.selectField:focus {
+    border-color: #4a76a8;
+    outline: none;
+}

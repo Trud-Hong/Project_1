@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.health" />
+	
+	<!-- MyBatis Mapper 스캔 -->
+	<beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <beans:property name="basePackage" value="com.health.mapper"/>
+	    <beans:property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+	</beans:bean>
+	
+	
+
+ 	<beans:bean id="adminDAO" class="com.health.dao.AdminDAO">
+
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="bloodPressureDAO" class="com.health.dao.BloodPressureDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="boardDAO" class="com.health.dao.BoardDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="conditionScoreDAO" class="com.health.dao.ConditionScoreDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="dietDAO" class="com.health.dao.DietDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="exerciseDAO" class="com.health.dao.ExerciseDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="habitDAO" class="com.health.dao.HabitDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="MemberDAO" class="com.health.dao.MemberDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="sleepDAO" class="com.health.dao.SleepRecordDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	<beans:bean id="bqDAO" class="com.health.dao.BqDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+
+	<beans:bean id="reviewDAO" class="com.health.dao.ReviewDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+
+	<beans:bean id="scoreDAO" class="com.health.dao.ScoreDAO">
+		<beans:property name="sessionTemplate" ref="sessionTemplate"/>
+	</beans:bean>
+	
+	
+	<!-- Gmail SMTP 설정 -->
+	<beans:bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	    <beans:property name="host" value="smtp.gmail.com"/>
+	    <beans:property name="port" value="587"/>
+	    <beans:property name="username" value="ghddnjstlr@gmail.com"/>
+	    <beans:property name="password" value="cddjudbbdpjsulcr"/>
+	    <beans:property name="javaMailProperties">
+        	<beans:props>
+	            <beans:prop key="mail.transport.protocol">smtp</beans:prop>
+	            <beans:prop key="mail.smtp.auth">true</beans:prop>
+	            <beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+	            <beans:prop key="mail.smtp.starttls.required">true</beans:prop>
+	            <beans:prop key="mail.smtp.ssl.trust">smtp.gmail.com</beans:prop>
+	            <beans:prop key="mail.debug">true</beans:prop>
+	            <beans:prop key="mail.mime.charset">UTF-8</beans:prop>
+	            <beans:prop key="mail.mime.encodefilename">true</beans:prop>
+	        </beans:props>
+		    </beans:property>
+		</beans:bean>
+	<!-- 여러 사용자에게 앱 비밀번호를 받는것은 로직이 복잡하고 보안 위험이 있어서 이번 프로젝트는
+	하나의 메일로 보내지도록 설정 -->
+
+
+	
+
+
+	<beans:bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg ref="sessionFactory"/>
+	</beans:bean>
+	
+
+	<!-- 패키지를 만들어 그 안에 xml 파일을 넣은 것이 아니므로 value="classpath:/mybatis-config.xml" 주소를 바로 xml파일로 적어줌 -->
+	<beans:bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource"/>
+		<beans:property name="configLocation" value="classpath:/mybatis-config.xml"/>
+	</beans:bean>
+	
+	<!-- DB연결 -->
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<beans:property name="url" value="jdbc:oracle:thin:@192.168.0.54:1521:xe"/>
+		<beans:property name="username" value="PJ1"/>
+		<beans:property name="password" value="123"/> 
+
+
+	</beans:bean>
+	
+	<beans:bean id="myUtil" class="com.health.util.MyUtil"/>
+	
+	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	    <beans:property name="messageConverters">
+	        <beans:list>
+	            <beans:bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+	        </beans:list>
+	    </beans:property>
+	</beans:bean>
+	
+</beans:beans>

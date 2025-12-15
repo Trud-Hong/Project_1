@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.board">
+
+	<select id="maxNum" resultType="int">
+
+		select nvl(max(board_id),0) from board
+
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.BoardDTO">
+		insert into board (board_id, category, title, content, member_no, reg_date)
+		values (#{board_id},#{category},#{title},#{content},#{member_no},sysdate)
+	</insert>
+	
+	<!-- 0928수정 -->
+	<!-- 게시글 개수 -->
+<select id="getDataCount" parameterType="map" resultType="int">
+    select nvl(count(*),0)
+    from board b
+    join member m on b.member_no = m.member_no
+    <where>
+        <!-- 카테고리 조건 -->
+        <if test="category != null and category != ''">
+            AND b.category = #{category}
+        </if>
+
+        <!-- 검색 조건 -->
+        <if test="searchValue != null and searchValue != ''">
+            <choose>
+                <when test="searchKey == 'title'">
+                    AND b.title like '%' || #{searchValue} || '%'
+                </when>
+                <when test="searchKey == 'content'">
+                    AND b.content like '%' || #{searchValue} || '%'
+                </when>
+                <when test="searchKey == 'member_name'">
+                    AND m.name like '%' || #{searchValue} || '%'
+                </when>
+            </choose>
+        </if>
+    </where>
+</select>
+
+
+<!-- 게시글 리스트 -->
+<select id="getLists" parameterType="map" resultType="com.health.dto.BoardDTO">
+    select * from (
+        select rownum rnum, data.* from (
+            select b.board_id,
+                   b.member_no,
+                   m.name as member_name,
+                   b.title,
+                   b.content,
+                   to_char(b.reg_date,'yyyy-MM-dd') as reg_date,
+                   b.category
+            from board b
+            join member m on b.member_no = m.member_no
+            <where>
+                <!-- 카테고리 조건 -->
+                <if test="category != null and category != ''">
+                    AND b.category = #{category}
+                </if>
+
+                <!-- 검색 조건 -->
+                <if test="searchValue != null and searchValue != ''">
+                    <choose>
+                        <when test="searchKey eq 'title'">
+                            AND b.title like '%' || #{searchValue} || '%'
+                        </when>
+                        <when test="searchKey eq 'content'">
+                            AND b.content like '%' || #{searchValue} || '%'
+                        </when>
+                        <when test="searchKey eq 'member_name'">
+                            AND m.name like '%' || #{searchValue} || '%'
+                        </when>
+                    </choose>
+                </if>
+            </where>
+            order by b.board_id desc
+        ) data
+    )
+    <![CDATA[
+        where rnum >= #{start} and rnum <= #{end}
+    ]]>
+</select> 
+	
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.BoardDTO">
+		select b.board_id, b.member_no, m.name as member_name, b.title, b.content,
+		to_char(b.reg_date,'yyyy-MM-dd') as reg_date 
+		from board b join member m
+		on b.member_no = m.member_no
+		where board_id=#{board_id}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.BoardDTO">
+		update board set title=#{title},
+		content=#{content}, member_no=#{member_no} where board_id=#{board_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete board where board_id=#{board_id}
+	</delete>
+
+</mapper>

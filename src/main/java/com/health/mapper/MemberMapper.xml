@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.member">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(num),0) from member
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.MemberDTO">
+		insert into member (member_no, member_id, password, name, birth, gender, height, weight, bmi, goal, JOIN_DATE, email)
+		values (member_seq.NEXTVAL,#{member_id},#{password},#{name},#{birth, jdbcType=DATE},#{gender},#{height},#{weight},#{bmi},#{goal},sysdate, #{email})
+	</insert>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.MemberDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select member_no, member_id, password, name, birth, gender, height, weight, bmi, goal, to_char(join_date,'yyyy-MM-dd') from member 
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by member_no desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getGoal" parameterType="int" resultType="com.health.dto.MemberDTO">
+		select member_no, goal from member 
+		where member_no=#{member_no}
+	</select>
+	
+	<select id="getReadData" parameterType="String" resultType="com.health.dto.MemberDTO">
+		select member_no, member_id, password, name, birth, 
+		gender, height, weight, bmi, 
+		goal, to_char(join_date,'YYYY-MM-DD'), email
+		from member 
+		where member_id=#{member_id}
+	</select>
+
+	<update id="updateData" parameterType="com.health.dto.MemberDTO">
+		update member set password=#{password},
+		name=#{name}, birth=#{birth}, height=#{height},
+		weight=#{weight}, bmi=#{bmi}, goal=#{goal,jdbcType=VARCHAR} where member_no=#{member_no}
+	</update>
+	
+	<update id="updateProfile" parameterType="com.health.dto.MemberDTO">
+		update member set birth=#{birth}, height=#{height},
+		weight=#{weight}, bmi=#{bmi}, goal=#{goal,jdbcType=VARCHAR} where member_no=#{member_no}
+	</update>
+
+	<update id="updateWeight" parameterType="com.health.dto.MemberDTO">
+		update member set weight=#{weight}, bmi=#{bmi} where member_no=#{member_no}
+	</update>
+
+	<update id="updateWeightMemberRecord" parameterType="com.health.dto.MemberDTO">
+		update member_record set weight=#{weight}, bmi=#{bmi} 
+		where member_no=#{member_no} and TRUNC(record_date) = TRUNC(SYSDATE)
+	</update>
+	
+	<insert id="insertMemberRecord" parameterType="com.health.dto.MemberDTO">
+    	INSERT INTO member_record (member_no, weight, bmi, record_date)
+    	VALUES (#{member_no}, #{weight}, #{bmi}, sysdate)
+	</insert>
+	
+	<select id="countRecord" parameterType="int" resultType="int">
+	    SELECT COUNT(*)
+	    FROM member_record
+	    WHERE member_no = #{member_no} AND TRUNC(record_date) = TRUNC(SYSDATE)
+	</select>
+	
+	<update id="updateGoal" parameterType="com.health.dto.MemberDTO">
+		update member set goal=#{goal} where member_no=#{member_no}
+	</update>
+	
+	<update id="updatePassword" parameterType="map">
+	    UPDATE member
+	    SET password = #{password}
+	    WHERE member_id = #{member_id}
+	</update>
+	
+	<!-- 탈퇴처리 쿼리 09.28수정 -->
+	<update id="updateStatus" parameterType="com.health.dto.MemberDTO">
+		UPDATE MEMBER
+		SET name = '탈퇴회원',
+			email = NULL,
+			password = NULL,
+			status = 'DELETE'
+		WHERE MEMBER_NO = #{member_no}
+	</update>
+	
+	
+	<delete id="deleteHabitData" parameterType="int">
+		delete habit_record where member_no=#{member_no}
+	</delete>
+	<delete id="deleteExerciseData" parameterType="int">
+		delete exercise_record where member_no=#{member_no}
+	</delete>
+	<delete id="deleteBGData" parameterType="int">
+		delete blood_glucose_log where member_no=#{member_no}
+	</delete>
+	<delete id="deleteBPData" parameterType="int">
+		delete blood_pressure where member_no=#{member_no}
+	</delete>
+	<delete id="deleteSleepData" parameterType="int">
+		delete sleep_record where member_no=#{member_no}
+	</delete>
+	<delete id="deleteCoummunity" parameterType="int">
+		delete board where member_no=#{member_no}
+	</delete>
+	<delete id="deleteReview" parameterType="int">
+		delete review where member_no=#{member_no}
+	</delete>
+	<delete id="deleteData" parameterType="int">
+		delete member where member_no=#{member_no}
+	</delete>
+	
+	
+	<!-- Email Mapper -->
+	
+	<!-- 이메일 존재 여부 -->
+    <select id="isEmailExist" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE email = #{email, jdbcType=VARCHAR}
+    </select>
+
+    <!-- 인증 코드 저장 (MERGE) -->
+	<insert id="saveAuthCode">
+	    MERGE INTO email_auth t
+	    USING dual
+	    ON (t.email = #{email})
+	    WHEN MATCHED THEN
+	        UPDATE SET auth_code = #{code}, expire_dt = #{expire}
+	    WHEN NOT MATCHED THEN
+	        INSERT (email, auth_code, expire_dt)
+	        VALUES (#{email, jdbcType=VARCHAR}, #{code}, #{expire})
+	</insert>
+	
+	<!-- 발송 로그 저장 -->
+	<insert id="saveAuthLog">
+	    INSERT INTO email_auth_log (email, auth_code, send_dt)
+	    VALUES (#{email, jdbcType=VARCHAR}, #{code}, SYSDATE)
+	</insert>
+
+    <!-- 인증 코드 조회 -->
+    <select id="getAuthCode" resultType="string">
+        SELECT auth_code
+        FROM email_auth
+        WHERE email = #{email, jdbcType=VARCHAR} AND expire_dt > SYSDATE
+    </select>
+
+    <!-- 이메일로 회원 ID 조회 -->
+    <select id="getMemberIdByEmail" resultType="string">
+        SELECT member_id
+        FROM member
+        WHERE email = #{email, jdbcType=VARCHAR}
+    </select>
+    
+	<insert id="insertEmailAuthLog">
+	    INSERT INTO email_auth_log (log_id, email, auth_code, send_dt)
+	    VALUES (email_auth_log_seq.NEXTVAL, #{email, jdbcType=VARCHAR}, #{authCode}, SYSDATE)
+	</insert>
+	
+	<!-- 아이디 존재 여부 -->
+	<select id="isIdExist" resultType="int">
+	    SELECT COUNT(*)
+	    FROM member
+	    WHERE member_id = #{id}
+	</select>
+	
+	<!-- 아이디 이메일 일치여부 -->
+	<select id="isIdEmailEqual" resultType="int">
+		SELECT count(*)
+        FROM member
+        WHERE email = #{email, jdbcType=VARCHAR} and member_id = #{id}
+	</select>
+
+
+</mapper> 
+

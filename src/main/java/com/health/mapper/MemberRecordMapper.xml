@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.mapper.MemberRecordMapper">
+
+    
+    <select id="getGoalByMember" parameterType="int" resultType="string">
+	    SELECT goal
+	    FROM (
+	        SELECT goal
+	        FROM member_record
+	        WHERE member_no = #{memberNo}
+	        ORDER BY record_date DESC
+	    )
+	    WHERE ROWNUM = 1
+	</select>
+	
+	<select id="getWeightLogs" parameterType="int" resultType="com.health.dto.WeightDTO">
+	    SELECT member_no,
+	           weight,
+	           bmi,
+	           TO_CHAR(record_date, 'YYYY-MM-DD') AS record_date
+	    FROM member_record
+	    WHERE member_no = #{memberNo}
+	      AND weight IS NOT NULL
+	    ORDER BY record_date ASC
+	</select>
+	<!-- member_no -->
+
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-/mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+
+<!-- null 값 JDBC 타입 기본값 설정 -->
+<settings>
+    <setting name="jdbcTypeForNull" value="VARCHAR"/>
+</settings>
+
+
+<mappers>
+
+	<mapper resource="com/health/mapper/AdminMapper.xml"/>
+	<mapper resource="com/health/mapper/BloodPressureMapper.xml"/>
+	<mapper resource="com/health/mapper/BoardMapper.xml"/>
+	<mapper resource="com/health/mapper/DietMapper.xml"/>
+	<mapper resource="com/health/mapper/ExerciseMapper.xml"/>
+	<mapper resource="com/health/mapper/HabitMapper.xml"/>
+	<mapper resource="com/health/mapper/MemberMapper.xml"/>
+	<mapper resource="com/health/mapper/SleepRecordMapper.xml"/>
+	<mapper resource="com/health/mapper/HealthDataMapper.xml"/>
+	<mapper resource="com/health/mapper/BqMapper.xml"/>
+	<mapper resource="com/health/mapper/ReviewMapper.xml"/>
+	<mapper resource="com/health/mapper/WeeklyDietMapper.xml"/>
+	<mapper resource="com/health/mapper/MemberRecordMapper.xml"/>
+	<mapper resource="com/health/mapper/UserMapper.xml"/>
+	<mapper resource="com/health/mapper/ScoreMapper.xml"/>
+
+
+</mappers>
+
+
+</configuration>

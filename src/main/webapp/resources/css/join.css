@@ -1,0 +1,336 @@
+@charset "UTF-8";
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f9;
+	margin: 0;
+	padding: 0;
+}
+
+header {
+    background: #4a76a8;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+header .left {
+    flex: 1;
+}
+
+header > div:nth-child(2) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+header > div:nth-child(3) {
+    flex: 1;
+}
+    
+    header a{
+        color: white;
+	    text-decoration: none;
+	    font-weight: bold;
+	    font-size: 18pt;
+    }
+    
+    header a:hover{
+		text-decoration: none;
+    }
+   
+
+.container {
+	max-width: 600px;
+	margin: 30px auto;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.card {
+	background: white;
+	border-radius: 12px;
+	padding: 25px;
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+	margin-top: 0;
+	font-size: 20px;
+	margin-bottom: 20px;
+}
+
+.info-row {
+	margin-bottom: 15px;
+	display: flex;
+	flex-direction: column;
+	font-size: 16px;
+}
+
+.info-row label {
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+#userId {
+    flex: 2;  /* 기존보다 줄임 */
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.label{
+	margin-bottom: 15px;
+	display: flex;
+	flex-direction: column;
+	font-size: 16px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.info-row input, .info-row select {
+	padding: 8px 12px;
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	transition: border-color 0.2s;
+}
+
+.info-row input:focus, .info-row select:focus {
+	outline: none;
+	border-color: #4a76a8;
+}
+
+.btn {
+	display: inline-block;
+	padding: 5px 20px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 25px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background 0.2s;
+	border: none;
+}
+
+.btn:hover {
+	background: #3a5a85;
+}
+
+.btnId {
+	display: inline-block;
+	padding: 5px 20px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 25px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background 0.2s;
+	border: none;
+	margin-bottom: 15px;
+}
+
+.btnId:hover {
+	background: #3a5a85;
+}
+
+.danger {
+	background: #d9534f;
+}
+
+.danger:hover {
+	background: #c12e2a;
+}
+
+/* 라디오 숨기기 */
+input[type="radio"] {
+  display: none;
+}
+
+/* label 디자인 */
+input[type="radio"] + label {
+  display: inline-block;
+  padding: 5px 20px;
+  margin: 5px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* hover 시 효과 */
+input[type="radio"] + label:hover {
+  border-color: #666;
+}
+
+/* 선택된 상태 */
+input[type="radio"]:checked + label {
+  background-color: #4a76a8;
+  color: white;
+  border-color: #4a76a8;
+}
+
+.email-domain-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 200px; /* input 길이 지정 */
+}
+
+#emailDomain {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+
+
+#emailUser {
+    flex: 2;  /* 기존보다 줄임 */
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+
+/* 도메인 선택 select */
+#emailSelect {
+    flex: 2;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.email-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    position: relative; /* 추가 */
+}
+
+.email-input-group label {
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+/* 도메인 목록 */
+.domain-list {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    width: 100%; /* input과 동일하게 */
+    box-sizing: border-box; /* padding 포함 */
+    border-radius: 12px;
+    max-height: 120px; /* 최대 높이, 스크롤 가능 */
+    overflow-y: auto;
+}
+
+/* 도메인 목록 아이템 */
+.domain-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.domain-list li:hover {
+    background-color: #f0f0f0;
+}
+
+/* 개인정보 수집 및 이용 동의 섹션 */
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+    gap: 10px;
+    font-size: 10px;
+}
+
+.right input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+/* 체크박스 체크 시 색상 변경 */
+.right input[type="checkbox"]:checked {
+    background-color: #4a76a8;
+    border-color: #4a76a8;
+}
+
+/* 텍스트 스타일 */
+.right a {
+    color: #4a76a8;
+    font-size: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+/* hover 시 링크 색상 변화 */
+.right a:hover {
+    color: #3a5a85;
+}
+
+/* 텍스트와 체크박스 사이 간격 */
+.right .info-row {
+    margin-bottom: 6px;
+}
+
+/* 동의하기 버튼 */
+.right .agree-btn {
+    padding: 8px 16px;
+    background-color: #4a76a8;
+    color: white;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+
+.right .agree-btn:hover {
+    background-color: #3a5a85;
+}
+
+/* 체크박스와 버튼을 정렬하는 container */
+.agree-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    widows: 100%
+}
+
+/* 작은 텍스트 표시 */
+.agree-container span {
+    font-size: 10px;
+    color: #777;
+}
+
+/* 개인정보 수집 동의 텍스트 스타일 */
+.right a {
+    font-size: 14px;
+    margin-left: spx;
+}
+
+/* 아이디/비밀번호 등 기본 스타일에 대한 간격 조정 */
+.container .card {
+    padding: 20px;
+}

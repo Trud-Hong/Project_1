@@ -1,0 +1,22 @@
+#경로
+target/
+.settings/
+.classpath
+.project
+.springBeans
+.apt_generated/
+.factorypath/
+
+
+#로그
+*.log
+*.tmp
+*.bak
+*.swp
+
+#=== Environment or local config files ===
+.env
+.env.*
+application-local.yml
+application-local.properties
+

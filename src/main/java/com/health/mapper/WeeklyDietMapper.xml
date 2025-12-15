@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.mapper.WeeklyDietMapper">
+
+    <!-- goal 기준 주간 식단 조회 -->
+    <select id="getWeeklyDietByGoal" parameterType="string" resultType="map">
+        SELECT
+            record_date AS REC_DATE,
+            morning AS MORNING,
+            lunch AS LUNCH,
+            dinner AS DINNER,
+            kcal AS TOTALKCAL,
+            CASE 
+                WHEN goal = '건강유지' THEN '건강식'
+                WHEN goal = '다이어트' THEN '저칼로리/다이어트'
+                WHEN goal = '벌크업' THEN '고단백/고칼로리'
+                ELSE NULL
+            END AS CATEGORY
+        FROM weekly_diet_recommendation
+        WHERE goal = #{goal}
+        ORDER BY record_date
+    </select>
+
+</mapper>

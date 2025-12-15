@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.admin">
+	
+	<insert id="insertData" parameterType="com.health.dto.AdminDTO">
+		insert into admin (admin_id,name,password)
+		values (#{admin_id},#{name},#{password})
+	</insert>
+	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from admin
+	</select>
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.AdminDTO">
+		select * from (
+		select rownum rnum, data.* from(
+		select admin_id,name,password from admin
+		where ${searchKey} like '%' || #{searchValue} || '%'
+		order by admin_id desc) data)
+	<![CDATA[
+		where rnum>=#{start} and rnum<=#{end}
+	]]>
+	</select>
+	
+	<select id="getReadData" parameterType="String" resultType="com.health.dto.AdminDTO">
+		select admin_id,name,password
+		from admin
+		where admin_id=#{admin_id}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.AdminDTO">
+		update admin set name=#{name}, password=#{password} where admin_id=#{admin_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="String">
+		delete admin where admin_id=#{admin_id}
+	</delete>
+	
+<!-- 	<select id="testNow" resultType="string">
+    	SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') FROM dual
+	</select> -->
+	
+
+</mapper>

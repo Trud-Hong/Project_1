@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.score">
+
+
+	<select id="getBPData" parameterType="map" resultType="com.health.dto.ScoreDTO">
+        select bp_id, member_no, bp_level
+		from blood_pressure
+        WHERE member_no = #{member_no}
+        ORDER BY bp_ID DESC
+	</select>
+
+	<select id="getSleepHoursData" parameterType="map" resultType="com.health.dto.ScoreDTO">
+        select record_id, member_no, sleep_hours
+		from sleep_record
+        WHERE member_no = #{member_no}
+        ORDER BY record_ID DESC
+	</select>
+	<select id="getBedtimeData" parameterType="map" resultType="com.health.dto.ScoreDTO">
+        select record_id, member_no, bedtime
+		from sleep_record
+        WHERE member_no = #{member_no}
+        ORDER BY record_ID DESC
+	</select>
+	
+	<select id="getExerciseData" parameterType="map" resultType="com.health.dto.ScoreDTO">
+        select record_id, member_no, duration
+		from exercise_record
+        WHERE member_no = #{member_no}
+        ORDER BY record_ID DESC
+	</select>
+	
+	<select id="gethabitData" parameterType="map" resultType="com.health.dto.ScoreDTO">
+        select record_id, member_no, breakfast_time, lunch_time, dinner_time
+		from habit_record
+        WHERE member_no = #{member_no}
+        ORDER BY record_ID DESC
+	</select>
+
+</mapper>

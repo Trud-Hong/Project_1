@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.mapper.HealthDataMapper">
+
+	<!-- 테스트용 
+    <select id="getDayData" resultType="map">
+        SELECT bp, sleep, exercise, diet, condition_score AS condition
+        FROM health_data
+        WHERE year = #{year} AND month = #{month} AND day = #{day}
+    </select>
+    -->
+    
+    <!-- 실제DB연결 -->
+
+   <select id="getDayData" parameterType="map" resultType="map">
+
+    SELECT
+        m.member_id,
+        m.name,
+        mr.bp_high || '/' || mr.bp_low AS BP,
+        mr.bp_level AS BP_LEVEL,
+        mr.sleep_hours AS SLEEP,
+        TO_CHAR(mr.bedtime, 'HH24:MI') || '분' AS BEDTIME,
+        NVL(e.name || ' ' || mr.exercise_duration || '분', '운동 기록 없음') AS EXERCISE,
+        TO_CHAR(mr.morning_diet_id, 'HH24:MI') || '' AS MORNING,
+        TO_CHAR(mr.lunch_diet_id, 'HH24:MI') || '' AS LUNCH,
+        TO_CHAR(mr.dinner_diet_id, 'HH24:MI') || '' AS DINNER,
+        (NVL(mr.morning_totKcal,0) + NVL(mr.lunch_totKcal,0) + NVL(mr.dinner_totKcal,0)) AS TOTALKCAL,
+        mr.goal AS GOAL,
+        mr.condition_score AS CONDITION,
+        -- goal 기준 category 가져오기
+
+        CASE 
+            WHEN mr.goal = '건강유지' THEN '건강식'
+            WHEN mr.goal = '다이어트' THEN '저칼로리/다이어트'
+            WHEN mr.goal = '벌크업' THEN '고단백/고칼로리'
+            ELSE NULL
+        END AS CATEGORY
+
+    FROM member_record mr
+    JOIN member m
+        ON mr.member_no = m.member_no
+    LEFT JOIN exercise e
+        ON mr.exercise_id = e.ex_id
+
+    LEFT JOIN diet_temp dm
+        ON mr.morning_diet_id = dm.diet_id
+    LEFT JOIN diet_temp dl
+        ON mr.lunch_diet_id = dl.diet_id
+    LEFT JOIN diet_temp dd
+
+        ON mr.dinner_diet_id = dd.diet_id
+    WHERE m.member_id = #{memberId}
+      AND TRUNC(mr.record_date) = TO_DATE(#{year} || '-' || #{month} || '-' || #{day}, 'YYYY-MM-DD')
+</select>
+
+
+
+
+</mapper>

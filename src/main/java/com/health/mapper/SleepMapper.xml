@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.sleep">
+
+    <!-- ResultMap 정의 - 기존 테이블 구조에 맞춤 -->
+    <resultMap id="sleepResultMap" type="com.health.dto.SleepDTO">
+        <id property="sleepId" column="SLEEP_ID" javaType="int" jdbcType="NUMERIC"/>
+        <result property="memberNo" column="MEMBER_NO" javaType="int" jdbcType="NUMERIC"/>
+        <result property="sleepHours" column="SLEEP_HOURS" javaType="double" jdbcType="NUMERIC"/>
+        <result property="bedtime" column="BEDTIME" javaType="java.sql.Date" jdbcType="DATE"/>
+    </resultMap>
+
+    <!-- PK 자동 증가용 (시퀀스 사용하므로 필요없지만 호환성을 위해 유지) -->
+    <select id="maxNum" resultType="int">
+        SELECT NVL(MAX(sleep_id), 0) FROM sleep
+    </select>
+
+    <!-- 수면 기록 추가 - 시퀀스 자동 증가 -->
+    <insert id="insertData" parameterType="com.health.dto.SleepDTO">
+        INSERT INTO sleep (member_no, sleep_hours, bedtime)
+        VALUES (#{memberNo}, #{sleepHours}, #{bedtime})
+    </insert>
+
+    <!-- 수면 기록 개수 확인 -->
+    <select id="getDataCount" parameterType="map" resultType="int">
+        SELECT NVL(COUNT(*), 0) 
+        FROM sleep
+        WHERE ${searchKey} LIKE '%' || #{searchValue} || '%'
+    </select>
+
+    <!-- 페이징 리스트 -->
+    <select id="getLists" parameterType="map" resultMap="sleepResultMap">
+        SELECT * FROM (
+            SELECT ROWNUM rnum, data.* 
+            FROM (
+                SELECT sleep_id, member_no, sleep_hours, bedtime
+                FROM sleep
+                WHERE ${searchKey} LIKE '%' || #{searchValue} || '%'
+                ORDER BY sleep_id DESC
+            ) data
+        )
+        <![CDATA[
+            WHERE rnum >= #{start} AND rnum <= #{end}
+        ]]>
+    </select>
+
+    <!-- 특정 회원의 최신 수면 기록 (1건만) -->
+    <select id="getReadData" parameterType="int" resultType="com.health.dto.SleepDTO">
+        SELECT * FROM (
+            SELECT sleep_id, member_no, sleep_hours, bedtime
+            FROM sleep
+            WHERE member_no = #{value}
+            ORDER BY sleep_id DESC
+        )
+        <![CDATA[
+            WHERE ROWNUM <= 1
+        ]]>
+    </select>
+
+    <!-- 수면 기록 수정 -->
+    <update id="updateData" parameterType="com.health.dto.SleepDTO">
+        UPDATE sleep
+        SET sleep_hours = #{sleepHours}, 
+            bedtime = #{bedtime}
+        WHERE sleep_id = #{sleepId}
+    </update>
+
+    <!-- 수면 기록 삭제 -->
+    <delete id="deleteData" parameterType="int">
+        DELETE FROM sleep WHERE member_no = #{value}
+    </delete>
+
+</mapper>

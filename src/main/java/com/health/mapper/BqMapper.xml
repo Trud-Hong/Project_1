@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.bq">
+
+	<insert id="insertData" parameterType="com.health.dto.BqDTO">
+
+   		 insert into blood_glucose_log (member_no, fasting, aftermeal, beforebed, log_Date, created_At)
+   		 values (#{member_no},#{fasting}, #{afterMeal}, #{beforeBed},#{log_Date, jdbcType=DATE}, TRUNC(SYSDATE))
+	</insert>
+	
+	<select id="getReadData" parameterType="map" resultType="com.health.dto.BqDTO">
+	        SELECT * 
+	        FROM blood_glucose_log
+	        WHERE member_no = #{member_no}
+	        ORDER BY log_date DESC
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.BqDTO">
+	    update blood_glucose_log
+	    	set fasting = #{fasting},
+	        afterMeal = #{afterMeal},
+	        beforeBed = #{beforeBed},
+	        created_at = SYSDATE
+	    where member_no = #{member_no} 
+	    and TRUNC(log_date) = TRUNC(#{log_Date})
+	</update>
+	
+
+	
+
+</mapper>

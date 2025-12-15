@@ -1,0 +1,138 @@
+@charset "UTF-8";
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f9;
+	margin: 0;
+	padding: 0;
+}
+
+header {
+    background: #4a76a8;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+header .left {
+    flex: 1;
+}
+
+header > div:nth-child(2) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+header > div:nth-child(3) {
+    flex: 1;
+}
+    
+    header a{
+        color: white;
+	    text-decoration: none;
+	    font-weight: bold;
+	    font-size: 18pt;
+    }
+    
+    header a:hover{
+		text-decoration: none;
+    }
+
+.container {
+	max-width: 600px;
+	margin: 80px auto 30px auto;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.card {
+	background: white;
+	border-radius: 12px;
+	padding: 25px;
+	box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+	margin-top: 0;
+	font-size: 20px;
+	margin-bottom: 20px;
+}
+
+.info-row {
+	margin-bottom: 15px;
+	display: flex;
+	flex-direction: column;
+	font-size: 16px;
+}
+
+.info-row label {
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.fault {
+	color: red;
+	text-align: center;
+}
+
+.info-row input, .info-row select {
+	padding: 8px 12px;
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	transition: border-color 0.2s;
+}
+
+.info-row input:focus, .info-row select:focus {
+	outline: none;
+	border-color: #4a76a8;
+}
+
+.btn {
+	display: inline-block;
+	width: 100%;
+	box-sizing: border-box;
+	margin-top: 15px;
+	padding: 10px 20px;
+	background: #4a76a8;
+	color: white;
+	text-decoration: none;
+	border-radius: 25px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background 0.2s;
+	border: none;
+}
+
+
+.btn:hover {
+	background: #3a5a85;
+}
+
+.info-row textarea {
+	width: 100%;
+	padding: 12px;
+	border: 1px none #ddd;
+	border-radius: 20px;
+	font-size: 14px;
+	box-sizing: border-box;
+	resize: vertical;
+	min-height: 450px;
+}
+
+.personal-info-text {
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* 줄 바꿈을 자연스럽게 처리 */
+}
+
+.personal-info-text strong {
+    font-weight: bold; /* 볼드 처리 */
+    color: #4a76a8; /* 원하는 색상으로 설정 가능 */
+}

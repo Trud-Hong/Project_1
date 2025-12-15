@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-/mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.review">
+
+	<select id="maxNum" resultType="int">
+		select nvl(max(review_id),0) from review
+	</select>
+	
+	<insert id="insertData" parameterType="com.health.dto.ReviewDTO">
+		insert into review (member_no, review_id, title, content, reg_date, hit_count)
+		values (#{member_no},#{review_id},#{title},#{content},sysdate,0)
+	</insert>
+	
+	<!-- <select id="getDataCount" parameterType="map" resultType="int">
+		select nvl(count(*),0) from review
+	</select> -->
+	
+	<select id="getDataCount" parameterType="map" resultType="int">
+		SELECT NVL(COUNT(*), 0)
+		FROM review r
+		JOIN member m ON r.member_no = m.member_no
+		<where>
+			<choose>
+				<when test="searchKey == 'title'">
+					r.title LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchKey == 'member_name'">
+					m.name LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchKey == 'content'">
+					r.content LIKE '%' || #{searchValue} || '%'
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	<!-- <select id="getLists" parameterType="map" resultType="com.health.dto.ReviewDTO">
+		select * from (
+		select rownum rnum, data.* from (
+		select r.review_id, r.member_no, m.name as member_name, r.title, r.content,
+			to_char(r.reg_date,'yyyy-MM-dd') as reg_date, r.hit_count 
+			from review r join member m
+			on r.member_no = m.member_no
+			order by r.review_id desc) data)
+		<![CDATA[
+			where rnum >= #{start} and rnum <= #{end}
+		]]>
+	</select> -->
+	
+	<select id="getLists" parameterType="map" resultType="com.health.dto.ReviewDTO">
+	SELECT * FROM (
+		SELECT ROWNUM rnum, data.* FROM (
+			SELECT r.review_id, r.member_no, m.name AS member_name,
+			       r.title, r.content, TO_CHAR(r.reg_date, 'yyyy-MM-dd') AS reg_date,
+			       r.hit_count
+			FROM review r
+			JOIN member m ON r.member_no = m.member_no
+			<where>
+				<choose>
+					<when test="searchKey eq 'title'">
+						r.title LIKE '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchKey eq 'member_name'">
+						m.name LIKE '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchKey eq 'content'">
+						r.content LIKE '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+			ORDER BY r.review_id DESC
+		) data
+	)
+	<![CDATA[
+        where rnum >= #{start} and rnum <= #{end}
+    ]]>
+</select>
+
+	
+	<update id="updateHitCount" parameterType="int">
+		update review set hit_count=hit_count+1 where review_id=#{review_id}
+	</update>
+	
+	<select id="getReadData" parameterType="int" resultType="com.health.dto.ReviewDTO">
+		select r.review_id, r.member_no, m.name as member_name, r.title, r.content,
+			to_char(r.reg_date,'yyyy-MM-dd') as reg_date, r.hit_count 
+		from review r join member m
+		on r.member_no = m.member_no
+		where review_id=#{review_id}
+	</select>
+	
+	<update id="updateData" parameterType="com.health.dto.ReviewDTO">
+		update review set title=#{title},
+		content=#{content} where review_id=#{review_id}
+	</update>
+	
+	<delete id="deleteData" parameterType="int">
+		delete review where review_id=#{review_id}
+	</delete>
+
+</mapper>
