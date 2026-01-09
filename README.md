@@ -1,1 +1,3 @@
-# ProjectHealth
+# MyCondition
+체중,혈당,혈압,수면패턴등을기록
+신체 상태변화 정보 제공
